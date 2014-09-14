@@ -26,3 +26,8 @@
 *.exe
 *.out
 *.app
+
+# Nicolas
+*.fasta
+fasta_ran
+bin/*

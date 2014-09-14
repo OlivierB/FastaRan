@@ -1,2 +1,2 @@
-FastaRun
+FastaRan
 ========
