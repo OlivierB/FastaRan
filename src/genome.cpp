@@ -43,9 +43,9 @@ void Genome::set_size(int size) {
   size_ = size;
   if (size_ < 100) {
     size_ = 100;
-  } else if (size_ > 100000000) {
-    cout << "Ajustement de la taille du génome à 100M" << endl;
-    size_ = 1000000000;
+  } else if (size_ > 1000000000) {
+    cout << "Ajustement de la taille du génome à 1G" << endl;
+    size_ = 10000000000;
   }
 }
 
