@@ -54,10 +54,10 @@ void FastaCreator::generate(int coverage, FastaFormat* my_file) {
   //seq.print_coverage();
   
   
-  // cout << "Ecriture du fichier" << endl;
-  // vector<struct intervalle>* tabSeq = seq.sequences_list();
-  // for (vector<struct intervalle>::iterator it = tabSeq->begin(); it != tabSeq->end(); ++it)
-  //   my_file->write(genome_, &(*it));
+  cout << "Ecriture du fichier" << endl;
+  vector<struct intervalle>* tabSeq = seq.sequences_list();
+  for (vector<struct intervalle>::iterator it = tabSeq->begin(); it != tabSeq->end(); ++it)
+    my_file->write(genome_, &(*it));
 }
 
 int FastaCreator::get_coverage(){
