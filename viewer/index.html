@@ -1,0 +1,42 @@
+<html>
+
+<head>
+	<script type="text/javascript" src="lib/canvasjs.min.js"></script>
+	<script type="text/javascript" src="lib/prototype.js"></script>
+
+    <script type="text/javascript" src="js/EvolutionChart.js"></script>
+    <script type="text/javascript" src="js/WebSocketManager.js"></script>
+    <script type="text/javascript" src="js/NucleotideSinger.js"></script>
+    <script type="text/javascript" src="js/CoverageViewer.js"></script>
+	
+</head>
+<body>
+<input type="text" id="ip"></input>
+<button  onClick="run()">run</button>
+<canvas id="coverage_canvas" width="3000" height="150"></canvas>
+<div id="myChart" style="height: 500px; width: 50%;"></div>
+<div id="myChart2" style="height: 500px; width: 50%;"></div>
+<h1 id="nucleos" ></h1>
+<input type="range" min="0" max="100" value="25" id="range">
+</body>
+<script type="text/javascript">
+		run = function(){
+            var ip = "ws://" + document.getElementById('ip').value + ":9002";
+            console.log("connexion à " + ip)
+            chart = new EvolutionChart("myChart", "Coverage evolution", 100);
+            webSocketManager = new WebSocketManager(ip, "coverage", chart, 500);
+
+            // chart2 = new EvolutionChart("myChart2", "Memory usage");
+            // webSocketManager = new WebSocketManager(ip, "mem_usage", chart2, 500);
+
+            // nucleotideSinger = new NucleotideSinger("range", "nucleos");
+            // webSocketManager = new WebSocketManager("ws://192.168.1.28:9002", "nucleos", nucleotideSinger, 1000);
+
+            coverage = new CoverageViewer("coverage_canvas");
+            webSocketManager = new WebSocketManager(ip, "sequences_cover", coverage, 1000);
+        }
+		
+
+</script>
+</html>
+
