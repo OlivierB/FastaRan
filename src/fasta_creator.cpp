@@ -47,6 +47,7 @@ void FastaCreator::generate(int coverage, FastaFormat* my_file) {
     sum = seq->sum_coverage();
     
     a += 1;
+    fc_coverage = seq->ratio_coverage_percent();
   }
   seq->print_stats();
   //seq.print_sequences();
