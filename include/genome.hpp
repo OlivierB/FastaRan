@@ -32,6 +32,6 @@ class Genome {
     void set_size(int size);
     void set_ratioGC_percent(int ratioGC);
 };
-
+//LOULLLL
 
 #endif
