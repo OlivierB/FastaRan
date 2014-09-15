@@ -24,35 +24,38 @@ void FastaCreator::generate(int coverage, FastaFormat* my_file) {
     coverage = 1;
     cout << "Ajustement de la valeur de recouvrement à 1" << endl;
   }
-  
+
   // Gestion des intervalles
   SequenceCoverage seq(0, genome_->size());
   
-  int rand_pos, rand_size, start, end;
-
+  int rand_pos, rand_size;
   int a = 0;
+  int sum = 0;
   // Création d'une séquence
   while (seq.ratio_coverage_percent() < coverage) {
     rand_pos = rand() % (genome_->size() + 1);
     rand_size = rand() % 1000 + 75;
     
-    start = rand_pos - rand_size;
-    end = rand_pos + rand_size;
-    if (start < 0)
-      start = 0;
-    if (end > genome_->size())
-      end = genome_->size();
+    seq.add_sequence(rand_pos - rand_size, rand_pos + rand_size);
     
-    seq.add_sequence(start, end);
+    if (sum > seq.sum_coverage()) {
+      cout << "ERREUR : Mauvaise somme (" << sum << ", " << seq.sum_coverage() << ")." <<  endl;
+      break;
+    }
+    sum = seq.sum_coverage();
+    
     a += 1;
   }
   seq.print_stats();
   //seq.print_sequences();
-  //seq.print_sequences();
+  //seq.print_coverage();
+  
   
   cout << "Ecriture du fichier" << endl;
   vector<struct intervalle>* tabSeq = seq.sequences_list();
   for (vector<struct intervalle>::iterator it = tabSeq->begin(); it != tabSeq->end(); ++it)
     my_file->write(genome_, &(*it));
 }
+
+
 

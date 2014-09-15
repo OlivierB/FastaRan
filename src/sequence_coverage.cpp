@@ -34,6 +34,10 @@ void SequenceCoverage::add_sequence(int start, int end) {
     inter.start = start_;
   if (inter.end > end_)
     inter.end = end_;
+  if (inter.end  - inter.start < 0) {
+    cout << "ERREURR : Intervalle négatif." << endl;
+    return;
+  }
   
   // ajout dans la liste des actions effectués
   sequences_list_.push_back(inter);
@@ -48,14 +52,14 @@ void SequenceCoverage::add_sequence(int start, int end) {
     if (coverage_[position-1].end  >= inter.end) {
       // absorbé
       //cout << "absorbé" << endl;
-    } else if (coverage_[position-1].end + 1 >= inter.start) {
+    } else if (coverage_[position-1].end >= inter.start) {
       // fin continue
       //cout << "continue" << endl;
       sum_coverage_ += ((inter.end - inter.start) - (coverage_[position-1].end - inter.start));
       coverage_[position-1].end = inter.end;
     } else {
-      //cout << "discontinue" << endl;
       // fin discontinue
+      //cout << "discontinue" << endl;
       sum_coverage_ += (inter.end - inter.start);
       coverage_.push_back(inter);
     }
@@ -72,23 +76,26 @@ void SequenceCoverage::add_sequence(int start, int end) {
     
     // Récupérer les intervalles concernés
     int pos_end = position;
-    while (pos_end < coverage_.size() && coverage_[pos_end].start - 1 <= inter.end) {
+    while (pos_end < coverage_.size() && coverage_[pos_end].start <= inter.end) {
       pos_end += 1;
     }
     
-    //cout << "Total : " << coverage_.size() << endl;
-    //cout << "position : " << position << endl;
-    //cout << "position end : " << pos_end << endl;
+    //cout << "Nb elem : " << coverage_.size() << " pos S : " << position << " pos E : " << pos_end << endl;
     
     
     if (position == pos_end) {
       //cout << "0 intermediaire" << endl;
       // pas d'intervalles concernés
-      if (position > 0 && coverage_[position-1].end + 1 >= inter.start) {
-        //cout << "etendu précédent" << endl;
-        // possibilité d'étendre l'intervalle précédent
-        sum_coverage_ += ((inter.end - inter.start) - (coverage_[position-1].end - inter.start));
-        coverage_[position-1].end = inter.end;
+      if (position > 0 && coverage_[position-1].end >= inter.start) {
+        if (coverage_[position-1].end < inter.end) {
+          //cout << "etendu précédent" << endl;
+          // possibilité d'étendre l'intervalle précédent
+          sum_coverage_ += ((inter.end - inter.start) - (coverage_[position-1].end - inter.start));
+          coverage_[position-1].end = inter.end;
+        } else {
+          // sinon absorbé
+          //cout << "absorbé" << endl;
+        }
       } else {
         //cout << "nouveau" << endl;
         //ajout de l'intervalle
@@ -98,12 +105,13 @@ void SequenceCoverage::add_sequence(int start, int end) {
     } else {
       //cout << pos_end - position << " intermediaire" << endl;
       // etendre la fin de l'intervalle si nécessaire
-      if (coverage_[pos_end-1].end > inter.end)
+      if (coverage_[pos_end-1].end > inter.end) {
         inter.end = coverage_[pos_end-1].end;
+      }
       
       // Gestion des intermédiares
       bool remove_first = false;
-      if (position > 0 && coverage_[position-1].end + 1 >= inter.start) {
+      if (position > 0 && coverage_[position-1].end >= inter.start) {
         //cout << "first remove" << endl;
         // Gestion de l'intervalle précédent
         remove_first = true;
@@ -111,16 +119,18 @@ void SequenceCoverage::add_sequence(int start, int end) {
         inter.start = coverage_[position-1].start;
       }
       
-      // suppression des intermédiaires sauf 1
+      // suppression des intermédiaires sauf le premier
       for (int cpt = position+1; cpt < pos_end; cpt++) {
         //cout << "remove num " << cpt << endl;
         sum_coverage_ -= coverage_[position+1].end - coverage_[position+1].start;
         coverage_.erase(coverage_.begin()+position+1);
       }
       
-      //cout << "change value" << endl;
-      // Ajout de l'intervalle grâce à l'intermédiare restant
-      sum_coverage_ += inter.end - inter.start - (coverage_[position].end - coverage_[position].start);
+      // Décompter l'intervalle oublié
+      sum_coverage_ -= (coverage_[position].end - coverage_[position].start);
+      // Ajout de l'intervalle
+      sum_coverage_ += inter.end - inter.start;
+      // Modification de l'élément intermédiaire laissé de coté
       coverage_[position].start = inter.start;
       coverage_[position].end = inter.end;
       

@@ -31,3 +31,4 @@
 *.fasta
 fasta_ran
 bin/*
+*~
