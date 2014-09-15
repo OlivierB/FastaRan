@@ -14,8 +14,10 @@ FastaCreator::~FastaCreator() {
 
 FastaCreator::FastaCreator(Genome* genome) {
   genome_ = genome;
-  if (genome_->nucleotides_string() == NULL)
+  if (genome_->nucleotides_string() == NULL) {
+    cout << "Génération automatique d'un génome de 100 nucléotides" << endl;
     genome_->auto_generation(100, 50);
+   }
 }
 
 void FastaCreator::generate(int coverage, FastaFormat* my_file) {
