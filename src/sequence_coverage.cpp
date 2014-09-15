@@ -154,5 +154,3 @@ void SequenceCoverage::print_stats() {
   cout << "Ratio recouvrement : " << ratio_coverage_percent() << endl;
   cout << "Taille table de recouvrement : " << coverage_.size() << endl;
 }
-
-

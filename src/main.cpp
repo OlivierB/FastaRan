@@ -5,7 +5,7 @@
 #include "../include/fasta_creator.hpp"
 #include "../include/genome.hpp"
 #include "../include/fasta_format.hpp"
-
+#include "../include/websocket_watcher.hpp"
 
 // Structure
 struct s_parameters {
@@ -51,9 +51,14 @@ int main(int argc, char** argv) {
   
   // Algo principal
   FastaCreator fastaCreator(&genome);
+
+  WebSocketWatcher watcher(&fastaCreator);
+  watcher.run(9002);
   
   // Go !
   fastaCreator.generate(params.coverage, &myFile);
+
+  watcher.join();
 
   return 0;
 }

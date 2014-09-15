@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 
-
+#include "../include/sequence_coverage.hpp"
 #include "../include/genome.hpp"
 
 class FastaFormat {
@@ -21,6 +21,8 @@ class FastaFormat {
 
     void set_file_name(std::string file_name)
       { file_name_ = file_name; }
+
+    int get_file_size();
     
   protected:
     std::string file_name_;

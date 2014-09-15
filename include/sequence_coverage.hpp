@@ -32,7 +32,7 @@ class SequenceCoverage {
     int sum_coverage() { return sum_coverage_; }
     std::vector<struct intervalle>* coverage() { return &coverage_; }
     std::vector<struct intervalle>* sequences_list() { return &sequences_list_; }
-
+    int ratio_coverage();
 
     // affichage
     void print_coverage();

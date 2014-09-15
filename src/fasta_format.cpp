@@ -41,3 +41,6 @@ void FastaFormatUn::write(Genome* genome, struct intervalle* inter) {
 }
 
 
+int FastaFormat::get_file_size(){
+  return file_stream_.tellp();
+}
