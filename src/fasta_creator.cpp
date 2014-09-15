@@ -2,7 +2,19 @@
 #include "../include/sequence_coverage.hpp"
 
 
+#include <thread>
+#include <unistd.h>
+
 using namespace std;
+
+void follow_cover(SequenceCoverage* seq_cov, bool* term) {
+  cout << "--------------" << endl;
+  while (!*term) {
+    cout << "\r" << flush;
+  	cout << "Progresssion : " << seq_cov->ratio_coverage_percent() << " % " << flush;
+  	sleep(1);
+  }
+}
 
 FastaCreator::FastaCreator() {
   genome_ = NULL;
@@ -29,6 +41,8 @@ void FastaCreator::generate(int coverage, FastaFormat* my_file) {
 
   // Gestion des intervalles
   seq = new SequenceCoverage(0, genome_->size());
+  bool t_terminate = false;
+  thread my_thread(follow_cover, seq, &t_terminate);
   
   int rand_pos, rand_size;
   int a = 0;
@@ -49,6 +63,8 @@ void FastaCreator::generate(int coverage, FastaFormat* my_file) {
     a += 1;
     fc_coverage = seq->ratio_coverage_percent();
   }
+  t_terminate = true;
+
   seq->print_stats();
   //seq.print_sequences();
   //seq.print_coverage();
